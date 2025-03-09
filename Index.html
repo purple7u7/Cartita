@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carta</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+        }
+
+        .music-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            background-color: rgba(255, 255, 255, 0.7);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 20px;
+            transition: all 0.3s;
+        }
+
+        .music-control:hover {
+            background-color: rgba(255, 255, 255, 0.9);
+            transform: scale(1.1);
+        }
+
+        .envelope {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            background-color: #f8c3cd;
+            border-radius: 5px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            transition: all 0.5s ease-in-out;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .envelope:hover {
+            transform: translateY(-10px);
+        }
+
+        .front {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            background-color: #f8c3cd;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transform-origin: bottom;
+            transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            z-index: 2;
+        }
+
+        .front:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            width: 0;
+            height: 0;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-top: 100px solid #f5a8b9;
+            transform-origin: top;
+            transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+
+        .flap {
+            position: absolute;
+            top: 0;
+            width: 0;
+            height: 0;
+            border-left: 150px solid transparent;
+            border-right: 150px solid transparent;
+            border-top: 150px solid #f5a8b9;
+            border-bottom: 100px solid transparent;
+            transform-origin: top;
+            transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+            z-index: 3;
+        }
+
+        .envelope.open .front {
+            transform: rotateX(180deg);
+        }
+
+        .envelope.open .flap {
+            transform: rotateX(180deg);
+            z-index: 1;
+        }
+
+        .letter {
+            position: absolute;
+            width: 100%;
+            height: 90%;
+            background-color: #fff;
+            border-radius: 5px;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.9s cubic-bezier(0.4, 0.0, 0.2, 1);
+            transform: translateY(20px);
+            opacity: 0;
+            z-index: 1;
+            overflow: auto;
+        }
+
+        .envelope.open .letter {
+            transform: translateY(-40px);
+            opacity: 1;
+            z-index: 2;
+        }
+
+        .heart {
+            color: #e91e63;
+            font-size: 24px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .letter h1 {
+            color: #e91e63;
+            margin-bottom: 15px;
+            font-size: 24px;
+        }
+
+        .letter p {
+            line-height: 1.5;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .signature {
+            font-style: italic;
+            color: #e91e63;
+            margin-top: 20px;
+            font-size: 18px;
+        }
+
+        .sparkles {
+            position: absolute;
+            pointer-events: none;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .sparkle {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            animation: float 3s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="sparkles" id="sparkles"></div>
+
+    <div class="envelope" id="envelope">
+        <div class="front">
+            <span class="heart">❤️</span>
+        </div>
+        <div class="flap"></div>
+        <div class="letter">
+            <h1><div class="signature">ALISON</div></h1>
+            <p>Mirate tan joven,tan inteligente,tan linda y tan llena de sueños, claro que lo vas a lograr,solo no te rindas.</p>
+            <p>Nunca dejes de sonreir y deseo que te vaya muy bonito</p>
+            <p>FELIZ DIA PRINCESA</p>   
+            <div class="signature">atte: Bruno</div>
+        </div>
+    </div>
+
+    <button class="music-control" id="musicControl">♪</button>
+
+    <audio id="backgroundMusic" loop autoplay>
+        <source src="MILOjaudiomass-output.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        const envelope = document.getElementById('envelope');
+        const musicControl = document.getElementById('musicControl');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        const sparklesContainer = document.getElementById('sparkles');
+
+        // Start playing music automatically when page loads
+        window.addEventListener('load', function() {
+            // Try to play music automatically
+            backgroundMusic.play().catch(function(error) {
+                console.log("Auto-play was prevented. User must interact with the page first.");
+                // We'll keep the music button showing ♫ to indicate music is paused
+                musicControl.innerHTML = '♫';
+            });
+        });
+
+        // Toggle envelope open/close
+        envelope.addEventListener('click', function() {
+            this.classList.toggle('open');
+            
+            // Create sparkle effect when opening
+            if (this.classList.contains('open')) {
+                createSparkles();
+                
+                // Also try to play music when user interacts
+                if (backgroundMusic.paused) {
+                    backgroundMusic.play();
+                    musicControl.innerHTML = '♪';
+                }
+            }
+        });
+
+        // Toggle music play/pause
+        musicControl.addEventListener('click', function(e) {
+            e.stopPropagation(); // Prevent triggering envelope click
+            
+            if (backgroundMusic.paused) {
+                backgroundMusic.play();
+                this.innerHTML = '♪';
+            } else {
+                backgroundMusic.pause();
+                this.innerHTML = '♫';
+            }
+        });
+
+        // Create sparkles
+        function createSparkles() {
+            sparklesContainer.innerHTML = '';
+            
+            for (let i = 0; i < 30; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.classList.add('sparkle');
+                
+                // Random properties
+                const size = Math.random() * 5 + 2;
+                const posX = Math.random() * 300;
+                const posY = Math.random() * 200 + 100;
+                const delay = Math.random() * 2;
+                
+                // Apply styles
+                sparkle.style.width = `${size}px`;
+                sparkle.style.height = `${size}px`;
+                sparkle.style.left = `${posX}px`;
+                sparkle.style.top = `${posY}px`;
+                sparkle.style.animationDelay = `${delay}s`;
+                
+                // Random colors for sparkles
+                const colors = ['#ffccd5', '#ffb3c6', '#ff8fab', '#f5a8b9', '#ffccd5'];
+                sparkle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                sparklesContainer.appendChild(sparkle);
+            }
+        }
+    </script>
+</body>
+</html>
